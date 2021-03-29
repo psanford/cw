@@ -33,11 +33,8 @@ var (
 	noColor        = kp.Flag("no-color", "Disable coloured output.").Short('c').Default("false").Bool()
 	debug          = kp.Flag("debug", "Enable debug logging.").Short('d').Default("false").Hidden().Bool()
 
-	lsCommand = kp.Command("ls", "Show an entity.")
-
-	lsGroups = lsCommand.Command("groups", "Show all groups.")
-
-	lsStreams      = lsCommand.Command("streams", "Show all streams in a given log group.")
+	lsGroups       = kp.Command("groups", "Show all groups.")
+	lsStreams      = kp.Command("streams", "Show all streams in a given log group.")
 	lsLogGroupName = lsStreams.Arg("group", "The group name.").Required().String()
 
 	tailCommand        = kp.Command("tail", "Tail log groups/streams.")
@@ -177,12 +174,12 @@ func main() {
 	c := cloudwatch.New(awsEndpointURL, awsProfile, awsRegion, log)
 
 	switch cmd {
-	case "ls groups":
+	case "groups":
 
 		for msg := range c.LsGroups() {
 			fmt.Println(*msg)
 		}
-	case "ls streams":
+	case "streams":
 		for msg := range c.LsStreams(lsLogGroupName, nil) {
 			fmt.Println(*msg)
 		}
